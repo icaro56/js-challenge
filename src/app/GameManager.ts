@@ -115,10 +115,10 @@ export class GameManager {
     }
 
     private OnFinalPositionCallback(block: Block) {
-        console.log("cheguei na posicao final");
+        //console.log("cheguei na posicao final");
 
         if (this.IsBlockEqualFinalBlock(block)) {
-            console.log("blocos são iguais!");
+            //console.log("blocos são iguais!");
             // Carrega a próxima fase se há mais fase senão dá Fim de Jogo
             if (this.HasNextLevel()) {
                 this.LoadNextLevelProcedure();
