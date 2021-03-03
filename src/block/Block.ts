@@ -1,8 +1,10 @@
 import * as PIXI from "pixi.js";
-import { GameObject } from "../basic/GameObject";
+import { CellObject } from "../basic/CellObject";
+import { Transform } from "../basic/Transform";
+import { BuilderConfig } from "../builders/BuilderConfig";
 
-export class Block extends GameObject {
-    private view: PIXI.Sprite;
+export class Block extends CellObject implements Transform {
+    private view: PIXI.Graphics;
 
     // altura em unidade de largura
     private size: number;
@@ -15,19 +17,47 @@ export class Block extends GameObject {
 
     constructor(size: number, color: number, isInitialBlock = true) {
         super();
-        const resource = PIXI.Loader.shared.resources["arrow"];
-        this.view = new PIXI.Sprite(resource.texture);
-        this.view.anchor.set(0.5, 0.5);
+        //const resource = PIXI.Loader.shared.resources["arrow"];
+        this.view = new PIXI.Graphics();
+        this.isInitialBlock = isInitialBlock;
 
         this.size = size;
-        this.view.scale.y = this.size;
 
         this.color = color;
 
         this.velocityX = 0;
         this.velocityY = 0;
 
-        this.isInitialBlock = isInitialBlock;
+        this.DrawRect(color);
+        this.view.scale.y = this.size;
+
+        // centralizando pivot
+        const halfBlockWidth = BuilderConfig.WorldCellWidth / 2;
+        this.view.pivot.x += halfBlockWidth;
+        this.view.pivot.y += halfBlockWidth;
+    }
+
+    private DrawRect(color: number) {
+        const width = BuilderConfig.WorldCellWidth;
+
+        if (!this.isInitialBlock) {
+            this.view.lineStyle(2, 0x808080, 1);
+            this.view.zIndex = 1;
+        } else {
+            this.view.lineStyle(2, color, 1);
+            this.view.zIndex = 2;
+        }
+
+        this.view.beginFill(color);
+
+        this.view.drawRect(0, 0, width, width);
+
+        if (!this.isInitialBlock) {
+            this.view.beginFill(0x808080, 0.3);
+            this.view.drawRect(0, 0, width, width);
+        }
+
+        this.view.endFill();
     }
 
     public SetSize(size: number): void {
@@ -35,11 +65,22 @@ export class Block extends GameObject {
         this.view.scale.y = this.size;
     }
 
+    // usado antes de aplicar o GSAP
+    public SetOnlySize(size: number): void {
+        this.size = size;
+    }
+
     public GetSize(): number {
         return this.size;
     }
 
     public SetColor(color: number): void {
+        this.color = color;
+        this.DrawRect(color);
+    }
+
+    // usado pelo antes de aplicar o GSAP
+    public SetOnlyColor(color: number): void {
         this.color = color;
     }
 
@@ -49,6 +90,14 @@ export class Block extends GameObject {
 
     public SetPosition(x: number, y: number): void {
         this.view.position.set(x, y);
+
+        /*const newY = this.view.height / 2;
+        const newX = this.view.width / 2;
+        this.Translate(-newX, -newY);*/
+    }
+
+    public GetPosition(): PIXI.Point {
+        return this.view.position;
     }
 
     public Translate(x: number, y: number): void {
@@ -56,13 +105,17 @@ export class Block extends GameObject {
         this.view.position.y += y;
     }
 
+    public GetView(): PIXI.Container {
+        return this.view;
+    }
+
+    public Destroy(): void {
+        this.view.destroy();
+    }
+
     public SetVelocity(velX: number, velY: number): void {
         this.velocityX = velX;
         this.velocityY = velY;
-    }
-
-    public GetView(): PIXI.Sprite {
-        return this.view;
     }
 
     public Update(delta: number): void {

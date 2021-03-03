@@ -1,6 +1,13 @@
 import * as PIXI from "pixi.js";
-import { Block } from "../block/Block";
+import { gsap } from "gsap";
+import { PixiPlugin } from "gsap/PixiPlugin";
 import { GameManager } from "./GameManager";
+import { Utils } from "../utils/Utils";
+
+// register the plugin
+gsap.registerPlugin(PixiPlugin);
+// give the plugin a reference to the PIXI object
+PixiPlugin.registerPIXI(PIXI);
 
 export class GameApp {
     private app: PIXI.Application;
@@ -8,19 +15,16 @@ export class GameApp {
     public View: HTMLCanvasElement;
     private gameWidth: number;
     private gameHeight: number;
-    private timer: number;
-    private box!: Block;
     private gameManager: GameManager;
 
     constructor(parent: HTMLElement, width: number, height: number) {
         this.app = new PIXI.Application({
             width,
             height,
-            backgroundColor: 0x000000,
+            backgroundColor: 0x111111,
             transparent: true,
             resolution: 1,
             antialias: true,
-            //resizeTo: window,
         });
 
         this.Stage = this.app.stage;
@@ -29,18 +33,19 @@ export class GameApp {
         this.gameWidth = width;
         this.gameHeight = height;
 
-        this.timer = 0;
-
         parent.appendChild(this.View);
 
-        this.gameManager = new GameManager(this.app.stage);
+        Utils.view = this.View;
+
+        this.gameManager = new GameManager(this.app.stage, this.app.view);
     }
 
     public async LoadGameAssets(): Promise<void> {
         return new Promise((resolve, reject) => {
             const loader = PIXI.Loader.shared;
             loader.baseUrl = "assets";
-            loader.add("arrow", "over.png");
+            loader.add("growing", "growing.png");
+            loader.add("decreasing", "decreasing.png");
             loader.add("levels", "levels.json");
 
             loader.onComplete.once(() => {
@@ -58,23 +63,15 @@ export class GameApp {
     }
 
     private LoadProgressHandler(loader: PIXI.Loader, resource: PIXI.LoaderResource) {
-        //Display the file `url` currently being loaded
         console.log("loading: " + resource.url);
 
-        //Display the percentage of files currently loaded
         console.log("progress: " + loader.progress + "%");
     }
 
     public resizeCanvas(): void {
-        const resize = () => {
-            this.app.renderer.resize(window.innerWidth, window.innerHeight);
-            this.Stage.scale.x = window.innerWidth / this.gameWidth;
-            this.Stage.scale.y = window.innerHeight / this.gameHeight;
-        };
+        Utils.ScaleToWindow(this.View);
 
-        resize();
-
-        window.addEventListener("resize", resize);
+        window.addEventListener("resize", (e) => Utils.ScaleToWindow(this.View));
     }
 
     public GameWidth(): number {
@@ -91,11 +88,10 @@ export class GameApp {
         // depois adicionar a forma que utiliza o WebService também
         const levels = PIXI.Loader.shared.resources["levels"].data;
         this.gameManager.Setup(levels);
-
         this.app.ticker.add((delta) => this.GameLoop(delta));
     }
 
     private GameLoop(delta: number): void {
-        this.timer += delta;
+        this.gameManager.Update(delta, this.app.ticker.elapsedMS);
     }
 }

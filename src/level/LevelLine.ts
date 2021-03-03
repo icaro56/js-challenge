@@ -1,4 +1,5 @@
 import { Graphics } from "pixi.js";
+import { BuilderConfig } from "../builders/BuilderConfig";
 
 export class LevelLine {
     private width: number;
@@ -11,23 +12,26 @@ export class LevelLine {
         // cinza
         this.color = 0x808080;
 
-        /*const str = "#800000";
-        const c = parseInt(str.replace(/^#/, ""), 16);*/
-
         this.renderer = new Graphics();
-        this.renderer.lineStyle(4, this.color, 1);
-        this.renderer.moveTo(0, 100);
-        this.renderer.lineTo(80, 100);
-        this.renderer.x = 32;
-        this.renderer.y = 32;
+        this.renderer.lineStyle(6, this.color, 1);
     }
 
     public GetView(): Graphics {
         return this.renderer;
     }
 
+    public SetCenter(x: number, y: number) {
+        this.renderer.x = x;
+        this.renderer.y = y;
+    }
+
     public SetWidth(width: number): void {
         this.width = width;
+
+        const halfWidth = width / 2;
+        const halfBlockWidth = BuilderConfig.WorldCellWidth / 2;
+        this.renderer.moveTo(-halfWidth + halfBlockWidth, 0);
+        this.renderer.lineTo(halfWidth - halfBlockWidth, 0);
     }
 
     public GetWidth(): number {
@@ -36,9 +40,14 @@ export class LevelLine {
 
     public SetColor(color: number): void {
         this.color = color;
+        this.renderer.lineStyle(6, color, 1);
     }
 
     public GetColor(): number {
         return this.color;
+    }
+
+    public Destroy() {
+        this.renderer.destroy();
     }
 }

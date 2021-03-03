@@ -5,6 +5,7 @@ import { SelectModifier } from "../modifiers/SelectModifier";
 import { SelectModifierType } from "../modifiers/SelectModifierType";
 import { BuilderConfig } from "./BuilderConfig";
 import { ModifierJson } from "../level/LevelJson";
+import { Utils } from "../utils/Utils";
 
 export class ModifierBuilder {
     private createdModifiers: Array<Modifier>;
@@ -32,6 +33,7 @@ export class ModifierBuilder {
 
                 if (modifier != null) {
                     this.SetupPosition(startPosition, modifier);
+                    modifier.GetView().zIndex = 0;
                     this.createdModifiers.push(modifier);
                 }
             }
@@ -39,6 +41,9 @@ export class ModifierBuilder {
     }
 
     public DestroyModifiers(): void {
+        for (let i = 0; i < this.createdModifiers.length; i++) {
+            this.createdModifiers[i].Destroy();
+        }
         this.createdModifiers.length = 0;
     }
 
@@ -80,8 +85,11 @@ export class ModifierBuilder {
     }
 
     private SetupPosition(startPosition: number, modifier: Modifier): void {
-        const positionX = this.CalculatePosition(startPosition);
+        const cellX = this.CalculatePosition(startPosition);
 
-        modifier.SetX(positionX);
+        modifier.SetCellX(cellX);
+
+        const pos = Utils.ConvertCellPosToPosition(cellX);
+        modifier.SetPosition(pos.x, pos.y);
     }
 }

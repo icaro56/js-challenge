@@ -29,7 +29,7 @@ export class LevelCells {
     }
 
     public IsFinalPosition(posX: number): boolean {
-        return posX == BuilderConfig.NumWorldCells - 1;
+        return posX == BuilderConfig.NumWorldCells;
     }
 
     public Clear(): void {
