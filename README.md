@@ -19,7 +19,7 @@ After execute the command `npm run build`, enter in folder `dist` using a Termin
 All basic tasks have been developed. 
 
 ## Optional Tasks
-Integrate with the PushStart API to load the levels. 
-Develop a level generator 
-Develop Visual Improvements. I made some improvements. 
-I did unit test for the classes. 
+- Integrate with the PushStart API to load the levels. 
+- Develop a level generator 
+- Develop Visual Improvements. I made some improvements. 
+- I did unit test for the classes. 
