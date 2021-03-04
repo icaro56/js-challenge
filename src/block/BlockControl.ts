@@ -19,7 +19,7 @@ export class BlockControl extends EventEmitter {
         this.isBeingModified = false;
     }
 
-    public Reset() {
+    public Reset(): void {
         this.block = null;
         this.timer = 0;
         this.reachTheFinalPosition = false;
@@ -70,8 +70,12 @@ export class BlockControl extends EventEmitter {
         }
     }
 
-    public TestEmitter() {
+    public TestEmitter(): void {
         this.block?.SetCellX(3);
         this.emit("OnFinalPosition", this.block);
+    }
+
+    public IsReachTheFinalPosition(): boolean {
+        return this.reachTheFinalPosition;
     }
 }

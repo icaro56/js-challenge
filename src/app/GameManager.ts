@@ -7,7 +7,6 @@ import { BlockControl } from "../block/BlockControl";
 import { Modifier } from "../modifiers/Modifier";
 import { LevelCells } from "../level/LevelCells";
 import { Block } from "../block/Block";
-import { Container } from "pixi.js";
 import { ModifierType } from "../modifiers/ModifierType";
 import { ColorizeModifier } from "../modifiers/ColorizeModifier";
 import { ResizeModifier } from "../modifiers/ResizeModifier";
@@ -26,7 +25,7 @@ export class GameManager {
     private finalBlock: Block | null;
     private stage: PIXI.Container;
     private view: HTMLCanvasElement;
-    private state: any | null;
+    private state: null | ((delta: number, elapsedMS: number) => void);
     private timerInMiliseconds: number;
     private levelName: LevelName;
     private LevelGenerator: LevelGenerator;
@@ -34,7 +33,7 @@ export class GameManager {
 
     constructor(stage: PIXI.Container, view: HTMLCanvasElement) {
         this.levelsJson = new Array<LevelJson>();
-        this.currentLevelIndex = 4;
+        this.currentLevelIndex = 0;
         this.levelLine = null;
         this.blockBuilder = new BlockBuilder();
         this.modifierBuilder = new ModifierBuilder();
@@ -60,7 +59,6 @@ export class GameManager {
 
         this.CreateNextLevel();
 
-        this.blockControl.GetBlock()?.SetVelocity(1, 0);
         this.state = this.Playing;
     }
 
@@ -83,10 +81,10 @@ export class GameManager {
 
         this.CreateLine();
 
-        const block = this.blockBuilder.CreateInitialBlock(level.initial, this.view);
+        const block = this.blockBuilder.CreateInitialBlock(level.initial);
         this.stage.addChild(block.GetView());
 
-        this.finalBlock = this.blockBuilder.CreateFinalBlock(level.final, this.view);
+        this.finalBlock = this.blockBuilder.CreateFinalBlock(level.final);
         this.stage.addChild(this.finalBlock.GetView());
 
         this.modifierBuilder.CreateModifiers(level.modifiers);

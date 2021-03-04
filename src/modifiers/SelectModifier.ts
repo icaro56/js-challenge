@@ -1,3 +1,4 @@
+/* tslint:disable:no-unused-variable */
 import { Modifier } from "./Modifier";
 import { ModifierType } from "./ModifierType";
 import { Block } from "../block/Block";
@@ -5,9 +6,7 @@ import { ColorizeModifier } from "./ColorizeModifier";
 import { ResizeModifier } from "./ResizeModifier";
 import { SelectModifierSingle } from "./SelectModifierSingle";
 import { SelectModifierType } from "./SelectModifierType";
-import { BuilderConfig } from "../builders/BuilderConfig";
 import * as PIXI from "pixi.js";
-import { CellObject } from "../basic/CellObject";
 
 export class SelectModifier extends Modifier {
     public modifierList: Array<Modifier>;
@@ -28,8 +27,8 @@ export class SelectModifier extends Modifier {
     private AddEventInOptionModifiers() {
         for (let i = 0; i < this.modifierList.length; i++) {
             const modifier = this.modifierList[i];
-            modifier.GetView().on("pointerup", (e: PointerEvent) => {
-                this.OnPointerUp(e);
+            modifier.GetView().on("pointerup", () => {
+                this.OnPointerUp();
             });
         }
     }
@@ -41,7 +40,7 @@ export class SelectModifier extends Modifier {
         }
     }
 
-    private OnPointerUp(e: PointerEvent) {
+    private OnPointerUp() {
         this.GetView().visible = false;
 
         const index = (this.currentModifierIndex + 1) % this.modifierList.length;

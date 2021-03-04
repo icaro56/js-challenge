@@ -35,4 +35,8 @@ export class LevelCells {
     public Clear(): void {
         this.modifierCells.clear();
     }
+
+    public GetLength(): number {
+        return this.modifierCells.keys.length;
+    }
 }

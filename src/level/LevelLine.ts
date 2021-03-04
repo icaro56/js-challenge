@@ -20,7 +20,7 @@ export class LevelLine {
         return this.renderer;
     }
 
-    public SetCenter(x: number, y: number) {
+    public SetCenter(x: number, y: number): void {
         this.renderer.x = x;
         this.renderer.y = y;
     }
@@ -47,7 +47,7 @@ export class LevelLine {
         return this.color;
     }
 
-    public Destroy() {
+    public Destroy(): void {
         this.renderer.destroy();
     }
 }

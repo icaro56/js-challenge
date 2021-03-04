@@ -76,7 +76,10 @@ export class GameApp {
     public resizeCanvas(): void {
         Utils.ScaleToWindow(this.View);
 
-        window.addEventListener("resize", (e) => Utils.ScaleToWindow(this.View));
+        window.addEventListener("resize", () => {
+            Utils.ScaleToWindow(this.View);
+            //console.log(e)
+        });
     }
 
     public GameWidth(): number {
@@ -101,7 +104,7 @@ export class GameApp {
     }
 
     private SetupGameByAPI() {
-        HTTPRequest.Get("https://teste.pushstart.com.br/api/blocks/levels")
+        HTTPRequest.Get<LevelJson[]>("https://teste.pushstart.com.br/api/blocks/levels")
             .then((response) => {
                 const levels = response;
                 this.InitGame(levels);

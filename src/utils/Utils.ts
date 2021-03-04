@@ -28,7 +28,7 @@ export class Utils {
         return pos;
     }
 
-    public static ScaleToWindow(canvas: any): number {
+    public static ScaleToWindow(canvas: HTMLCanvasElement): number {
         let center;
 
         //1. Scale the canvas to the correct size

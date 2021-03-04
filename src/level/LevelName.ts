@@ -25,7 +25,7 @@ export class LevelName implements Transform {
         return this.text.position;
     }
 
-    public SetName(name: string) {
+    public SetName(name: string): void {
         this.text.text = name;
     }
 

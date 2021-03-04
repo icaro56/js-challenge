@@ -15,8 +15,16 @@ export class ResizeModifier extends Modifier {
         this.size = size;
 
         const resourceName = size > 1 ? "growing" : "decreasing";
-        const texture = PIXI.Loader.shared.resources[resourceName].texture;
-        this.view = new PIXI.Sprite(texture);
+        let texture;
+
+        if (PIXI.Loader.shared.resources[resourceName] != undefined) {
+            texture = PIXI.Loader.shared.resources[resourceName].texture;
+            this.view = new PIXI.Sprite(texture);
+        } else {
+            const completeName = "assets/" + resourceName + ".png";
+            this.view = PIXI.Sprite.from(completeName);
+        }
+
         this.view.anchor.set(0.5);
 
         this.SetupAnimations();

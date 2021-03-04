@@ -12,7 +12,7 @@ export class Menu {
         this.view = view;
     }
 
-    public CreateChoseMenu(onClickFile: () => void, onClickApi: () => void) {
+    public CreateChoseMenu(onClickFile: () => void, onClickApi: () => void): void {
         const title = this.CreateText("Escolha a origem dos dados.", 50, 35, 0xffffff);
         this.stage.addChild(title);
 
@@ -92,7 +92,7 @@ export class Menu {
         });
     }
 
-    public DestroyChoseMenu() {
+    public DestroyChoseMenu(): void {
         for (let i = 0; i < this.menuTexts.length; i++) {
             this.menuTexts[i].removeAllListeners();
             this.stage.removeChild(this.menuTexts[i]);

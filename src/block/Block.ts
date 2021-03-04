@@ -10,23 +10,16 @@ export class Block extends CellObject implements Transform {
     private size: number;
     private color: number;
 
-    private velocityX: number;
-    private velocityY: number;
-
     private isInitialBlock: boolean;
 
     constructor(size: number, color: number, isInitialBlock = true) {
         super();
-        //const resource = PIXI.Loader.shared.resources["arrow"];
         this.view = new PIXI.Graphics();
         this.isInitialBlock = isInitialBlock;
 
         this.size = size;
 
         this.color = color;
-
-        this.velocityX = 0;
-        this.velocityY = 0;
 
         this.DrawRect(color);
         this.view.scale.y = this.size;
@@ -90,10 +83,6 @@ export class Block extends CellObject implements Transform {
 
     public SetPosition(x: number, y: number): void {
         this.view.position.set(x, y);
-
-        /*const newY = this.view.height / 2;
-        const newX = this.view.width / 2;
-        this.Translate(-newX, -newY);*/
     }
 
     public GetPosition(): PIXI.Point {
@@ -111,15 +100,5 @@ export class Block extends CellObject implements Transform {
 
     public Destroy(): void {
         this.view.destroy();
-    }
-
-    public SetVelocity(velX: number, velY: number): void {
-        this.velocityX = velX;
-        this.velocityY = velY;
-    }
-
-    public Update(delta: number): void {
-        this.view.position.x += this.velocityX /** delta*/;
-        this.view.position.y += this.velocityY /** delta*/;
     }
 }

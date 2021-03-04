@@ -10,7 +10,7 @@ export class BlockBuilder {
         this.blocks = new Array<Block>();
     }
 
-    public CreateInitialBlock(bl: BlockJson, view: HTMLCanvasElement): Block {
+    public CreateInitialBlock(bl: BlockJson): Block {
         const color = parseInt(bl.color.replace(/^#/, ""), 16);
         const block = new Block(bl.size, color, true);
         this.blocks.push(block);
@@ -22,7 +22,7 @@ export class BlockBuilder {
         return block;
     }
 
-    public CreateFinalBlock(bl: BlockJson, view: HTMLCanvasElement): Block {
+    public CreateFinalBlock(bl: BlockJson): Block {
         const color = parseInt(bl.color.replace(/^#/, ""), 16);
         const block = new Block(bl.size, color, false);
         this.blocks.push(block);
@@ -36,5 +36,9 @@ export class BlockBuilder {
 
     public DestroyBlocks(): void {
         this.blocks.length = 0;
+    }
+
+    public GetLength(): number {
+        return this.blocks.length;
     }
 }

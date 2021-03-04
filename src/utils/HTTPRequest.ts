@@ -1,6 +1,6 @@
 export class HTTPRequest {
-    public static Get(url: string): Promise<any> {
-        return new Promise<any>(function (resolve, reject) {
+    public static Get<T>(url: string): Promise<T> {
+        return new Promise<T>(function (resolve, reject) {
             const request = new XMLHttpRequest();
             request.responseType = "json";
             request.onload = function () {
