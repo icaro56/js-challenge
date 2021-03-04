@@ -23,3 +23,6 @@ All basic tasks have been developed.
 - Develop a level generator 
 - Develop Visual Improvements. I made some improvements. 
 - I did unit test for the classes. 
+
+## Gameplay
+Click or tap on the selectable blocks to change the modifier function. 
