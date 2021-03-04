@@ -1,3 +1,6 @@
+## Javascript game challenge 
+This is my solution for the Pushstart javascript game challenge. The challenge is to create a game in Javascript using the PixiJS graphics engine and the GSAP animation library. The challenge can be found at the link: https://bitbucket.org/pushstartstudio/challenge-javascript-game/src/master/
+
 ## Commands:
 
 -   `npm run build` - starts build procedure
@@ -11,3 +14,12 @@ For vscode users - ctrl ( or ⌘ ) + shift + b will run the watch build as its s
 ## Production
 
 After execute the command `npm run build`, enter in folder `dist` using a Terminal and execute the command `http-server`
+
+## Tasks
+All basic tasks have been developed. 
+
+## Optional Tasks
+Integrate with the PushStart API to load the levels. 
+Develop a level generator 
+Develop Visual Improvements. I made some improvements. 
+I did unit test for the classes. 
