@@ -13,6 +13,8 @@ import { ColorizeModifier } from "../modifiers/ColorizeModifier";
 import { ResizeModifier } from "../modifiers/ResizeModifier";
 import { SelectModifier } from "../modifiers/SelectModifier";
 import { LevelName } from "../level/LevelName";
+import { LevelGenerator } from "../level//LevelGenerator";
+import { Text, TextStyle } from "pixi.js";
 
 export class GameManager {
     private levelsJson: Array<LevelJson>;
@@ -27,10 +29,12 @@ export class GameManager {
     private state: any | null;
     private timerInMiliseconds: number;
     private levelName: LevelName;
+    private LevelGenerator: LevelGenerator;
+    private isHardCore: boolean;
 
     constructor(stage: PIXI.Container, view: HTMLCanvasElement) {
         this.levelsJson = new Array<LevelJson>();
-        this.currentLevelIndex = 0;
+        this.currentLevelIndex = 4;
         this.levelLine = null;
         this.blockBuilder = new BlockBuilder();
         this.modifierBuilder = new ModifierBuilder();
@@ -43,6 +47,8 @@ export class GameManager {
         this.stage.sortableChildren = true;
         this.timerInMiliseconds = 0;
         this.levelName = new LevelName();
+        this.LevelGenerator = new LevelGenerator();
+        this.isHardCore = false;
     }
 
     public Setup(levels: Array<LevelJson>): void {
@@ -71,6 +77,7 @@ export class GameManager {
 
     public CreateNextLevel(): void {
         const level = this.levelsJson[this.currentLevelIndex];
+        this.timerInMiliseconds = 0;
 
         this.ConfigureLevelName(level.name);
 
@@ -118,13 +125,13 @@ export class GameManager {
         //console.log("cheguei na posicao final");
 
         if (this.IsBlockEqualFinalBlock(block)) {
+            console.log("Level Score: " + this.timerInMiliseconds);
             //console.log("blocos são iguais!");
             // Carrega a próxima fase se há mais fase senão dá Fim de Jogo
             if (this.HasNextLevel()) {
                 this.LoadNextLevelProcedure();
             } else {
                 this.GameOverProcedure();
-                console.log(this.timerInMiliseconds);
             }
         } else {
             // Repete a mesma fase
@@ -156,7 +163,17 @@ export class GameManager {
     async GameOverProcedure(): Promise<void> {
         await new Promise((resolve) => setTimeout(resolve, 2000));
 
-        console.log("Fim do jogo! Você venceu!");
+        if (!this.isHardCore) {
+            console.log("Fim do jogo! Você venceu! Continue jogando as fases aleatórias");
+            this.CreateHardcoreText();
+            this.isHardCore = true;
+        }
+
+        this.GenerateNewLevel();
+
+        this.DestroyLevel();
+        this.currentLevelIndex++;
+        this.CreateNextLevel();
     }
 
     private IsBlockEqualFinalBlock(block: Block): boolean {
@@ -217,7 +234,27 @@ export class GameManager {
         this.levelLine = null;
     }
 
+    private GenerateNewLevel(): void {
+        const randomLevel = this.LevelGenerator.CreateNewRandomLevel();
+        this.levelsJson.push(randomLevel);
+    }
+
     private Debug() {
         console.log(this.levelsJson);
+    }
+
+    private CreateHardcoreText() {
+        const hardcoreText = new Text("Modo Hardcore Ativado");
+        hardcoreText.anchor.set(0.5);
+        hardcoreText.x = this.view.width / 2;
+        hardcoreText.y = this.view.height - 40;
+
+        const s = new TextStyle();
+        s.fill = 0xff0000;
+        s.fontSize = 20;
+        s.fontFamily = "Arial";
+        hardcoreText.style = s;
+
+        this.stage.addChild(hardcoreText);
     }
 }
